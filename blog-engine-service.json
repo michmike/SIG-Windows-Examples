@@ -1,0 +1,22 @@
+{
+   "kind":"Service",
+   "apiVersion":"v1",
+   "metadata":{
+      "name":"blog-engine",
+      "labels":{
+         "app":"blog-engine"
+      }
+   },
+   "spec":{
+      "ports": [
+         {
+           "port":8000,
+           "targetPort":"http-server"
+         }
+      ],
+      "selector":{
+         "app":"blog-engine"
+      },
+      "type":"NodePort"
+   }
+}

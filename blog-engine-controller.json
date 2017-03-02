@@ -1,0 +1,40 @@
+{
+   "kind":"ReplicationController",
+   "apiVersion":"v1",
+   "metadata":{
+      "name":"blog-engine",
+      "labels":{
+         "app":"blog-engine"
+      }
+   },
+   "spec":{
+      "replicas":1,
+      "selector":{
+         "app":"blog-engine"
+      },
+      "template":{
+         "metadata":{
+            "labels":{
+               "app":"blog-engine"
+            }
+         },
+         "spec":{
+            "containers":[
+               {
+                  "name":"blog-engine",
+                  "image":"blog-engine:v0.1",
+                  "ports":[
+                     {
+                        "name":"http-server",
+                        "containerPort":8000
+                     }
+                  ]
+               }
+            ],
+            "nodeSelector":{
+              "beta.kubernetes.io/os": "windows"
+            }
+         }
+      }
+   }
+}
