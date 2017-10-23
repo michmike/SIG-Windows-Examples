@@ -1,0 +1,72 @@
+#Secret
+apiVersion: v1
+data:
+  secret: VGhpcyBpcyBhIHNlY3JldAo=
+kind: Secret
+metadata:
+  name: super-secret
+---
+
+
+
+#ConfigMap
+apiVersion: v1
+data:
+  cm.value1: Hello Prague!
+  cm.value2: Glad to be here!
+kind: ConfigMap
+metadata:
+  name: oss-prague-config
+---
+
+
+
+#Pod with Volume 
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: guestbook
+  labels:
+    app: guestbook
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: guestbook
+    spec:
+      containers:
+      - name: guestbook
+        image: bsteciuk/guestbook:v1.4
+        env:
+          - name: CM_VALUE1
+            valueFrom:
+              configMapKeyRef:
+                name: oss-prague-config
+                key: cm.value1
+          - name: CM_VALUE2
+            valueFrom:
+              configMapKeyRef:
+                name: oss-prague-config
+                key: cm.value2
+          - name: SUPER_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: super-secret
+                key: secret
+        ports:
+        - name: http-server
+          containerPort: 3000
+          protocol: TCP
+        volumeMounts:
+        - name: guestapp-volume
+          mountPath: C:/app/data
+      volumes:
+      - name: guestapp-volume
+        hostPath:
+        #directory location on host
+          path: C:/guestapp-mount
+      nodeSelector:
+        beta.kubernetes.io/os: windows
+
+
